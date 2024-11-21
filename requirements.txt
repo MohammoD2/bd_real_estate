@@ -4,3 +4,10 @@ selenium
 beautifulsoup4
 pandas 
 numpy 
+gdown
+streamlit
+pandas
+scikit-learn
+spacy
+plotly
+numpy
