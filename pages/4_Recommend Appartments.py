@@ -53,11 +53,13 @@ class TextPreprocessor(BaseEstimator, TransformerMixin):
 
 # File paths and Google Drive IDs from Streamlit secrets
 GDRIVE_FILES = {
-    "similarity_matrix":  st.secrets["keys"]["SIMILARITY_MATRIX_KEY"]
+    "similarity_matrix":  st.secrets["keys"]["SIMILARITY_MATRIX_KEY"],
+    "rf": st.secrets["keys"]["RF_KEY"]
 }
 
 LOCAL_FILES = {
     "similarity_matrix": "similarity_matrix2.pkl",
+    "rf": "rf.pkl"
 }
 
 # Download similarity matrix from Google Drive if not exists (optional)
@@ -71,10 +73,12 @@ download_file_from_drive(GDRIVE_FILES["similarity_matrix"], LOCAL_FILES["similar
 
 with open(LOCAL_FILES["similarity_matrix"], 'rb') as f:
     similarity_matrix = pickle.load(f)
+with open(LOCAL_FILES["rf"], 'rb') as file:
+    rf = pickle.load(file)
 
 # Load the data directly from the provided path
-df = pd.read_csv(r"Data\processed\Recommendation_data.csv")
-df.dropna(inplace=True)
+# rf = pd.read_csv(r"data\processed\Recommendation_data.csv")
+# rf.dropna(inplace=True)
 
 # Filter function for filtering the data
 def filter_data(data, area=None, min_price=None, max_price=None, min_bedrooms=None, max_bedrooms=None):
@@ -93,7 +97,7 @@ def filter_data(data, area=None, min_price=None, max_price=None, min_bedrooms=No
 
 # Recommendation function based on similarity
 def get_recommendations(index, top_n=5, area=None, min_price=None, max_price=None, min_bedrooms=None, max_bedrooms=None):
-    filtered_data = filter_data(df, area, min_price, max_price, min_bedrooms, max_bedrooms)
+    filtered_data = filter_data(rf, area, min_price, max_price, min_bedrooms, max_bedrooms)
     filtered_indices = filtered_data.index.tolist()
     
     # Calculate similarity only for filtered data
@@ -101,13 +105,13 @@ def get_recommendations(index, top_n=5, area=None, min_price=None, max_price=Non
     similarity_scores = sorted(similarity_scores, key=lambda x: x[1], reverse=True)
     
     top_properties = [i[0] for i in similarity_scores[1:top_n+1]]
-    return df[['property_name', 'price', 'bedrooms', 'bathrooms', 'floor_area', 'area', 'short_description', 'property_url']].iloc[top_properties]
+    return rf[['property_name', 'price', 'bedrooms', 'bathrooms', 'floor_area', 'area', 'short_description', 'property_url']].iloc[top_properties]
 
 # Streamlit UI
 st.title("Real Estate Recommendation System")
 
 # User inputs
-area = st.selectbox('Enter Area', sorted(df['area'].unique().tolist()))
+area = st.selectbox('Enter Area', sorted(rf['area'].unique().tolist()))
 min_price = st.number_input("Minimum Price (in Taka)", min_value=0, step=100000)
 max_price = st.number_input("Maximum Price (in Taka)", min_value=0, step=100000)
 min_bedrooms = st.number_input("Minimum Bedrooms", min_value=0, step=1)
