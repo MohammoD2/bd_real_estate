@@ -3,7 +3,6 @@ import pandas as pd
 import pickle
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.base import BaseEstimator, TransformerMixin
-import spacy
 import gdown
 import os
 
