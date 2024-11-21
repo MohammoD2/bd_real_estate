@@ -5,7 +5,6 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 from sklearn.base import BaseEstimator, TransformerMixin
-import spacy
 import streamlit as st
 
 st.set_page_config(
