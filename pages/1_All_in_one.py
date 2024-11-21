@@ -153,6 +153,7 @@ if 'base_price' in st.session_state:
 
 if 'base_price' in st.session_state and 'recommended_properties' in st.session_state:
     # Step 3: Analysis trigger
+    # Step 3: Analysis trigger
     if st.button("Analyze Recommendations"):
         st.header("Step 3: Recommendation Analysis")
         
@@ -165,70 +166,100 @@ if 'base_price' in st.session_state and 'recommended_properties' in st.session_s
                 recommended_analysis_data = recommendations.copy()
                 st.session_state.recommended_analysis_data = recommended_analysis_data
 
-                st.subheader("Customize Your Visualization")
-                analysis_type = st.selectbox("Select Analysis Type", ["2D Plot", "3D Plot"], key="analysis_type")
+    if 'recommended_analysis_data' in st.session_state:
+        recommended_analysis_data = st.session_state.recommended_analysis_data
 
-                if analysis_type == "2D Plot":
-                    st.write("### 2D Visualization")
-                    col1, col2 = st.columns(2)
+        st.subheader("Customize Your Visualization")
+        # Select plot type: 2D or 3D
+        plot_dimension = st.selectbox("Select Plot Dimension", ["2D Plot", "3D Plot"], key="plot_dimension")
 
-                    with col1:
-                        column_x = st.selectbox("Select X-axis column", options=recommended_analysis_data.columns, key='2d_x')
-                        column_y = st.selectbox("Select Y-axis column", options=recommended_analysis_data.columns, key='2d_y')
+        if plot_dimension == "2D Plot":
+            st.subheader("2D Plot Settings")
+            # 2D Plot customization
+            col1, col2 = st.columns(2)
+            with col1:
+                column_x = st.selectbox("Select X-axis column", options=recommended_analysis_data.columns, key='2d_x_col')
+            with col2:
+                column_y = st.selectbox("Select Y-axis column", options=recommended_analysis_data.columns, key='2d_y_col')
 
-                    plot_type_2d = st.selectbox(
-                        "Select 2D Plot Type",
-                        ["Scatter Plot", "Line Plot", "Bar Plot", "Histogram", "Box Plot", "Violin Plot", "Density Plot"],
-                        key='2d_plot_type'
-                    )
+            plot_type_2d = st.selectbox(
+                "Select 2D Plot Type", 
+                [
+                    "Scatter Plot", 
+                    "Line Plot", 
+                    "Bar Plot", 
+                    "Histogram", 
+                    "Box Plot", 
+                    "Violin Plot", 
+                    "Density Plot"
+                ], 
+                key="plot_type_2d"
+            )
 
-                    st.write(f"**{plot_type_2d} of {column_y} vs {column_x}**")
-                    if plot_type_2d == "Scatter Plot":
-                        fig = px.scatter(recommended_analysis_data, x=column_x, y=column_y, title=f"{column_y} vs {column_x} (Scatter Plot)")
-                    elif plot_type_2d == "Line Plot":
-                        fig = px.line(recommended_analysis_data, x=column_x, y=column_y, title=f"{column_y} vs {column_x} (Line Plot)")
-                    elif plot_type_2d == "Bar Plot":
-                        fig = px.bar(recommended_analysis_data, x=column_x, y=column_y, title=f"{column_y} vs {column_x} (Bar Plot)")
-                    elif plot_type_2d == "Histogram":
-                        fig = px.histogram(recommended_analysis_data, x=column_x, y=column_y, title=f"{column_y} vs {column_x} (Histogram)")
-                    elif plot_type_2d == "Box Plot":
-                        fig = px.box(recommended_analysis_data, x=column_x, y=column_y, title=f"{column_y} vs {column_x} (Box Plot)")
-                    elif plot_type_2d == "Violin Plot":
-                        fig = px.violin(recommended_analysis_data, x=column_x, y=column_y, box=True, points="all", title=f"{column_y} vs {column_x} (Violin Plot)")
-                    elif plot_type_2d == "Density Plot":
-                        fig = px.density_contour(recommended_analysis_data, x=column_x, y=column_y, title=f"{column_y} vs {column_x} (Density Plot)")
+            st.write(f"**{plot_type_2d} of {column_y} vs {column_x}**")
+            if plot_type_2d == "Scatter Plot":
+                fig = px.scatter(recommended_analysis_data, x=column_x, y=column_y)
+            elif plot_type_2d == "Line Plot":
+                fig = px.line(recommended_analysis_data, x=column_x, y=column_y)
+            elif plot_type_2d == "Bar Plot":
+                fig = px.bar(recommended_analysis_data, x=column_x, y=column_y)
+            elif plot_type_2d == "Histogram":
+                fig = px.histogram(recommended_analysis_data, x=column_x, y=column_y)
+            elif plot_type_2d == "Box Plot":
+                fig = px.box(recommended_analysis_data, x=column_x, y=column_y)
+            elif plot_type_2d == "Violin Plot":
+                fig = px.violin(recommended_analysis_data, x=column_x, y=column_y, box=True, points="all")
+            elif plot_type_2d == "Density Plot":
+                fig = px.density_contour(recommended_analysis_data, x=column_x, y=column_y)
 
-                    # Display the plot
-                    st.plotly_chart(fig)
+            st.plotly_chart(fig)
 
-                elif analysis_type == "3D Plot":
-                    st.write("### 3D Visualization")
-                    col1, col2, col3 = st.columns(3)
+        elif plot_dimension == "3D Plot":
+            st.subheader("3D Plot Settings")
+            # 3D Plot customization
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                column_x = st.selectbox("Select X-axis column", options=recommended_analysis_data.columns, key='3d_x_col')
+            with col2:
+                column_y = st.selectbox("Select Y-axis column", options=recommended_analysis_data.columns, key='3d_y_col')
+            with col3:
+                column_z = st.selectbox("Select Z-axis column", options=recommended_analysis_data.columns, key='3d_z_col')
 
-                    with col1:
-                        column_x = st.selectbox("Select X-axis column", options=recommended_analysis_data.columns, key='3d_x')
-                    with col2:
-                        column_y = st.selectbox("Select Y-axis column", options=recommended_analysis_data.columns, key='3d_y')
-                    with col3:
-                        column_z = st.selectbox("Select Z-axis column", options=recommended_analysis_data.columns, key='3d_z')
+            plot_type_3d = st.selectbox(
+                "Select 3D Plot Type", 
+                [
+                    "Scatter Plot", 
+                    "Line Plot", 
+                    "Surface Plot", 
+                    "Mesh Plot", 
+                    "Bubble Plot"
+                ], 
+                key="plot_type_3d"
+            )
 
-                    plot_type_3d = st.selectbox(
-                        "Select 3D Plot Type",
-                        ["3D Scatter Plot", "3D Line Plot", "3D Surface Plot", "3D Bubble Plot"],
-                        key='3d_plot_type'
-                    )
+            st.write(f"**{plot_type_3d} of {column_z} vs {column_y} vs {column_x}**")
+            if plot_type_3d == "Scatter Plot":
+                fig = px.scatter_3d(recommended_analysis_data, x=column_x, y=column_y, z=column_z)
+            elif plot_type_3d == "Line Plot":
+                fig = px.line_3d(recommended_analysis_data, x=column_x, y=column_y, z=column_z)
+            elif plot_type_3d == "Surface Plot":
+                fig = px.density_heatmap(recommended_analysis_data, x=column_x, y=column_y, z=column_z)
+            elif plot_type_3d == "Mesh Plot":
+                fig = px.mesh3d(
+                    recommended_analysis_data, 
+                    x=column_x, 
+                    y=column_y, 
+                    z=column_z,
+                    opacity=0.5
+                )
+            elif plot_type_3d == "Bubble Plot":
+                fig = px.scatter_3d(
+                    recommended_analysis_data, 
+                    x=column_x, 
+                    y=column_y, 
+                    z=column_z, 
+                    size="price",  # Example: bubble size based on 'price'
+                    color="area"   # Example: color based on 'area'
+                )
 
-                    st.write(f"**{plot_type_3d} of {column_z} vs {column_y} vs {column_x}**")
-                    if plot_type_3d == "3D Scatter Plot":
-                        fig = px.scatter_3d(recommended_analysis_data, x=column_x, y=column_y, z=column_z, title=f"{column_z} vs {column_y} vs {column_x} (3D Scatter Plot)")
-                    elif plot_type_3d == "3D Line Plot":
-                        fig = px.line_3d(recommended_analysis_data, x=column_x, y=column_y, z=column_z, title=f"{column_z} vs {column_y} vs {column_x} (3D Line Plot)")
-                    elif plot_type_3d == "3D Surface Plot":
-                        fig = px.density_heatmap(recommended_analysis_data, x=column_x, y=column_y, z=column_z, title=f"{column_z} vs {column_y} vs {column_x} (3D Surface Plot)")
-                    elif plot_type_3d == "3D Bubble Plot":
-                        fig = px.scatter_3d(recommended_analysis_data, x=column_x, y=column_y, z=column_z, size="price", color="area", title=f"{column_z} vs {column_y} vs {column_x} (3D Bubble Plot)")
-
-                    # Display the plot
-                    st.plotly_chart(fig)
-            else:
-                st.write("No recommendations available for analysis.")
+            st.plotly_chart(fig)
