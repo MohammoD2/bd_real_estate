@@ -16,6 +16,36 @@ st.header("Welcome to my real estate project🏘️")
 st.image("R.jpg", caption=None, width=None, use_column_width=None, clamp=False, channels="RGB", output_format="auto")
 st.sidebar.success("Select a demo above.")
 # Retrieve the Google Drive file IDs from Streamlit secrets management
+st.markdown(
+    """
+    <style>
+    .marquee {
+        width: 100%;
+        margin: 0 auto;
+        white-space: nowrap;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+    .marquee span {
+        display: inline-block;
+        padding-left: 100%;
+        animation: marquee 15s linear infinite;
+        font-size: 36px; /* Adjust the font size here to make it bigger */
+        font-weight: bold; /* Make the text bold */
+    }
+    @keyframes marquee {
+        0% { transform: translate(0, 0); }
+        100% { transform: translate(-100%, 0); }
+    }
+    </style>
+    <div class="marquee">
+        <span>Recommendations Are Available in These Areas: Mirpur, Bashundhara R/A, Uttara, Badda, Mohammadpur, Banasree, Aftab Nagar, Dakshin Khan, Dhanmondi, Agargaon, and Rampura</span>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+# Set page configuration (this should be the first Streamlit command)
+# Retrieve the Google Drive file IDs from Streamlit secrets management
 GDRIVE_FILES = {
     "similarity_matrix": st.secrets["keys"]["SIMILARITY_MATRIX_KEY"],
     "pipeline": st.secrets["keys"]["PIPELINE_KEY"],
