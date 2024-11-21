@@ -3,7 +3,7 @@ import plotly.express as px
 import streamlit as st
 
 # Load and clean the dataset
-data = pd.read_csv(r'data\processed\Recommendation_data.csv')
+data = pd.read_csv(r'Data\processed\Recommendation_data.csv')
 data = data.drop(columns=['Unnamed: 0'])
 
 # Streamlit UI setup
