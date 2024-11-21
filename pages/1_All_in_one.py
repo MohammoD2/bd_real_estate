@@ -4,7 +4,6 @@ import pickle
 import pandas as pd
 import numpy as np
 import gdown
-from sklearn.base import BaseEstimator, TransformerMixin
 # import spacy
 import plotly.express as px
 
@@ -15,13 +14,15 @@ st.set_page_config(page_title="Integrated Real Estate App")
 GDRIVE_FILES = {
     "similarity_matrix": st.secrets["keys"]["SIMILARITY_MATRIX_KEY"],
     "pipeline": st.secrets["keys"]["PIPELINE_KEY"],
-    "df": st.secrets["keys"]["DF_KEY"]
+    "df": st.secrets["keys"]["DF_KEY"],
+    "rf": st.secrets["keys"]["RF_KEY"]
 }
 
 LOCAL_FILES = {
     "similarity_matrix": "similarity_matrix2.pkl",
     "pipeline": "pipeline.pkl",
-    "df": "df.pkl"
+    "df": "df.pkl",
+    "rf": "rf.pkl"
 }
 
 # Download a file from Google Drive if it doesn't exist locally
@@ -40,22 +41,17 @@ def load_resources():
     # Load pickled data
     with open(LOCAL_FILES["df"], 'rb') as file:
         df = pickle.load(file)
+    with open(LOCAL_FILES["rf"], 'rb') as file:
+        rf = pickle.load(file)
     with open(LOCAL_FILES["pipeline"], 'rb') as file:
         pipeline = pickle.load(file)
     with open(LOCAL_FILES["similarity_matrix"], 'rb') as file:
         similarity_matrix = pickle.load(file)
-    
-    # Load recommendation data
-    recommendation_data = pd.read_csv(r"/mount/src/bd_real_estate/Data/processed/Recommendation_data.csv").dropna()
-    analysis_data = recommendation_data.drop(columns=['Unnamed: 0'], errors='ignore')
-    
-    # # Load spaCy NLP model
-    # nlp = spacy.load('en_core_web_sm')
 
-    return df, pipeline, similarity_matrix, recommendation_data, analysis_data
+    return df, pipeline, similarity_matrix, rf
 
 # Load resources
-df, pipeline, similarity_matrix, recommendation_data, analysis_data, nlp = load_resources()
+df, pipeline, similarity_matrix, rf = load_resources()
 
 # Custom transformer for text preprocessing
 # class TextPreprocessor(BaseEstimator, TransformerMixin):
@@ -68,10 +64,9 @@ df, pipeline, similarity_matrix, recommendation_data, analysis_data, nlp = load_
 #     def transform(self, X):
 #         return X.apply(lambda text: ' '.join([token.lemma_ for token in self.nlp(str(text))]))
 
-# Rest of your Streamlit app code (e.g., UI, filtering, recommendation logic, etc.)
-
-# Helper function: filter recommendation data
-def filter_data(data, area=None, min_price=None, max_price=None, min_bedrooms=None, max_bedrooms=None):
+# Helper function: filter recommendation data based on rf (recommendation model or dataset)
+def filter_data_rf(data, area=None, min_price=None, max_price=None, min_bedrooms=None, max_bedrooms=None):
+    # Assuming rf is a DataFrame or something that can be filtered like a DataFrame
     filtered_data = data.copy()
     if area:
         filtered_data = filtered_data[filtered_data['area'].str.contains(area, case=False)]
@@ -85,9 +80,10 @@ def filter_data(data, area=None, min_price=None, max_price=None, min_bedrooms=No
         filtered_data = filtered_data[filtered_data['bedrooms'] <= max_bedrooms]
     return filtered_data
 
-# Helper function: get recommendations
-def get_recommendations(index, top_n=5, area=None, min_price=None, max_price=None, min_bedrooms=None, max_bedrooms=None):
-    filtered_data = filter_data(recommendation_data, area, min_price, max_price, min_bedrooms, max_bedrooms).reset_index()
+# Helper function: get recommendations based on rf
+def get_recommendations_rf(index, top_n=5, area=None, min_price=None, max_price=None, min_bedrooms=None, max_bedrooms=None):
+    # Use the filter function tailored to rf data
+    filtered_data = filter_data_rf(rf, area, min_price, max_price, min_bedrooms, max_bedrooms).reset_index()
     if filtered_data.empty:
         st.write("No properties match the filtering criteria.")
         return pd.DataFrame()
@@ -132,7 +128,7 @@ if 'base_price' in st.session_state:
     # Step 2: Recommendation trigger
     if st.button("Get Recommendations for this Price"):
         st.header("Step 2: Property Recommendations")
-        recommendations = get_recommendations(
+        recommendations = get_recommendations_rf(
             0, 
             top_n=5, 
             area=area, 
@@ -161,9 +157,7 @@ if 'base_price' in st.session_state and 'recommended_properties' in st.session_s
         st.header("Step 3: Recommendation Analysis")
         
         # Use recommended properties for visualization
-        recommended_analysis_data = analysis_data[
-            analysis_data['property_name'].isin(st.session_state.recommended_properties['property_name'])
-        ]
+        recommended_analysis_data = recommendations.copy()
 
         if recommended_analysis_data.empty:
             st.write("No recommendations available for analysis.")
