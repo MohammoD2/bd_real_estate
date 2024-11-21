@@ -46,7 +46,7 @@ def load_resources():
         similarity_matrix = pickle.load(file)
     
     # Load recommendation data
-    recommendation_data = pd.read_csv(r"data/processed/Recommendation_data.csv").dropna()
+    recommendation_data = pd.read_csv(r"/mount/src/bd_real_estate/Data/processed/Recommendation_data.csv").dropna()
     analysis_data = recommendation_data.drop(columns=['Unnamed: 0'], errors='ignore')
     
     # Load spaCy NLP model
