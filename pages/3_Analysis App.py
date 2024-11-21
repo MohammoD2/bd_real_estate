@@ -1,9 +1,43 @@
 import pandas as pd
 import plotly.express as px
 import streamlit as st
+import pickle
+import gdown
+import os
+GDRIVE_FILES = {
+    "similarity_matrix": st.secrets["keys"]["SIMILARITY_MATRIX_KEY"],
+    "pipeline": st.secrets["keys"]["PIPELINE_KEY"],
+    "df": st.secrets["keys"]["DF_KEY"],
+    "rf": st.secrets["keys"]["RF_KEY"]
+}
+LOCAL_FILES = {
+    "similarity_matrix": "similarity_matrix2.pkl",
+    "pipeline": "pipeline.pkl",
+    "df": "df.pkl",
+    "rf": "rf.pkl"
+}
+# Download a file from Google Drive if it doesn't exist locally
+def download_file_from_drive(file_id, destination):
+    if not os.path.exists(destination):
+        with st.spinner(f"Downloading {destination}..."):
+            gdown.download(f"https://drive.google.com/uc?id={file_id}", destination, quiet=False)
 
+# Download all required files
+for key, file_id in GDRIVE_FILES.items():
+    download_file_from_drive(file_id, LOCAL_FILES[key])
+
+# Load resources (model, pipeline, and data) once using @st.cache_resource
+@st.cache_resource
+def load_resources():
+    with open(LOCAL_FILES["rf"], 'rb') as file:
+        rf = pickle.load(file)
+
+    return  rf
+
+# Load resources
+rf = load_resources()
 # Load and clean the dataset
-data = pd.read_csv(r'Data\processed\Recommendation_data.csv')
+data = rf
 data = data.drop(columns=['Unnamed: 0'])
 
 # Streamlit UI setup
