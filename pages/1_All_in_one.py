@@ -4,7 +4,6 @@ import pickle
 import pandas as pd
 import numpy as np
 import gdown
-# import spacy
 import plotly.express as px
 
 # Set page configuration
