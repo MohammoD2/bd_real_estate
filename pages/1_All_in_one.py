@@ -153,46 +153,47 @@ if 'base_price' in st.session_state:
 
 if 'base_price' in st.session_state and 'recommended_properties' in st.session_state:
     # Step 3: Analysis trigger
+    # Step 3: Analysis trigger
     if st.button("Analyze Recommendations"):
         st.header("Step 3: Recommendation Analysis")
         
-        # Use recommended properties for visualization
-        recommended_analysis_data = recommendations.copy()
+        # Ensure recommendations exist before copying or using it
+        if 'recommended_properties' in st.session_state:
+            recommendations = st.session_state.recommended_properties
+            
+            # Check if recommendations is not empty
+            if not recommendations.empty:
+                recommended_analysis_data = recommendations.copy()
+                st.session_state.recommended_analysis_data = recommended_analysis_data
 
-        if recommended_analysis_data.empty:
-            st.write("No recommendations available for analysis.")
+                st.subheader("Customize Your Visualization")
+                # Select plot type: 2D or 3D
+                plot_dimension = st.selectbox("Select Plot Dimension", ["2D Plot", "3D Plot"], key="plot_dimension")
+
+                if plot_dimension == "2D Plot":
+                    st.subheader("2D Plot")
+                    fig = px.scatter(
+                        recommended_analysis_data, 
+                        x='price', 
+                        y='floor_area', 
+                        color='bedrooms', 
+                        title="Price vs Floor Area (2D)",
+                        labels={'price': 'Price (Taka)', 'floor_area': 'Floor Area (sqft)'}
+                    )
+                    st.plotly_chart(fig)
+                else:
+                    st.subheader("3D Plot")
+                    fig = px.scatter_3d(
+                        recommended_analysis_data, 
+                        x='price', 
+                        y='floor_area', 
+                        z='bedrooms',
+                        color='area', 
+                        title="Price, Floor Area, and Bedrooms (3D)",
+                        labels={'price': 'Price (Taka)', 'floor_area': 'Floor Area (sqft)', 'bedrooms': 'Bedrooms'}
+                    )
+                    st.plotly_chart(fig)
+            else:
+                st.write("No recommendations available for analysis.")
         else:
-            # Save recommended analysis data in session state
-            st.session_state.recommended_analysis_data = recommended_analysis_data
-
-    # Check if analysis data is already in session state
-    if 'recommended_analysis_data' in st.session_state:
-        recommended_analysis_data = st.session_state.recommended_analysis_data
-
-        st.subheader("Customize Your Visualization")
-        # Select plot type: 2D or 3D
-        plot_dimension = st.selectbox("Select Plot Dimension", ["2D Plot", "3D Plot"], key="plot_dimension")
-
-        if plot_dimension == "2D Plot":
-            st.subheader("2D Plot")
-            fig = px.scatter(
-                recommended_analysis_data, 
-                x='price', 
-                y='floor_area', 
-                color='bedrooms', 
-                title="Price vs Floor Area (2D)",
-                labels={'price': 'Price (Taka)', 'floor_area': 'Floor Area (sqft)'}
-            )
-            st.plotly_chart(fig)
-        else:
-            st.subheader("3D Plot")
-            fig = px.scatter_3d(
-                recommended_analysis_data, 
-                x='price', 
-                y='floor_area', 
-                z='bedrooms',
-                color='area', 
-                title="Price, Floor Area, and Bedrooms (3D)",
-                labels={'price': 'Price (Taka)', 'floor_area': 'Floor Area (sqft)', 'bedrooms': 'Bedrooms'}
-            )
-            st.plotly_chart(fig)
+            st.write("No recommendations found yet. Please generate recommendations first.")
