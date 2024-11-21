@@ -52,7 +52,7 @@ def load_resources():
     # # Load spaCy NLP model
     # nlp = spacy.load('en_core_web_sm')
 
-    return df, pipeline, similarity_matrix, recommendation_data, analysis_data, nlp
+    return df, pipeline, similarity_matrix, recommendation_data, analysis_data
 
 # Load resources
 df, pipeline, similarity_matrix, recommendation_data, analysis_data, nlp = load_resources()
