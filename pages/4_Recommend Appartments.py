@@ -37,19 +37,19 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Load spaCy model
-nlp = spacy.load('en_core_web_sm')
+# # Load spaCy model
+# nlp = spacy.load('en_core_web_sm')
 
-# Custom transformer for text preprocessing (with lemmatization)
-class TextPreprocessor(BaseEstimator, TransformerMixin):
-    def __init__(self, nlp):
-        self.nlp = nlp
+# # Custom transformer for text preprocessing (with lemmatization)
+# class TextPreprocessor(BaseEstimator, TransformerMixin):
+#     def __init__(self, nlp):
+#         self.nlp = nlp
 
-    def fit(self, X, y=None):
-        return self
+#     def fit(self, X, y=None):
+#         return self
 
-    def transform(self, X):
-        return X.apply(lambda text: ' '.join([token.lemma_ for token in self.nlp(str(text))]))
+#     def transform(self, X):
+#         return X.apply(lambda text: ' '.join([token.lemma_ for token in self.nlp(str(text))]))
 
 # File paths and Google Drive IDs from Streamlit secrets
 GDRIVE_FILES = {
