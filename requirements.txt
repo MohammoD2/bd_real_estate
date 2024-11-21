@@ -1,15 +1,12 @@
-# local package
--e .
-selenium
-beautifulsoup4
+
 pandas 
 numpy 
-streamlit==1.20.0
-pandas==1.5.3
-scikit-learn==1.2.0
-spacy==3.6.0
-gdown==4.7.1
-plotly==5.14.0
-numpy==1.24.2
-cupy==12.0.0  # or use cupy-cuda for GPU support
+streamlit
+pandas
+scikit-learn
+spacy
+gdown
+plotly
+numpy
+cupy # or use cupy-cuda for GPU support
 
