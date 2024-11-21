@@ -73,7 +73,7 @@ with open(LOCAL_FILES["similarity_matrix"], 'rb') as f:
     similarity_matrix = pickle.load(f)
 
 # Load the data directly from the provided path
-df = pd.read_csv(r"data\processed\Recommendation_data.csv")
+df = pd.read_csv(r"Data\processed\Recommendation_data.csv")
 df.dropna(inplace=True)
 
 # Filter function for filtering the data
