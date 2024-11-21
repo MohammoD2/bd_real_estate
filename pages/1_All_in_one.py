@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 import gdown
 from sklearn.base import BaseEstimator, TransformerMixin
-import spacy
+# import spacy
 import plotly.express as px
 
 # Set page configuration
@@ -49,8 +49,8 @@ def load_resources():
     recommendation_data = pd.read_csv(r"/mount/src/bd_real_estate/Data/processed/Recommendation_data.csv").dropna()
     analysis_data = recommendation_data.drop(columns=['Unnamed: 0'], errors='ignore')
     
-    # Load spaCy NLP model
-    nlp = spacy.load('en_core_web_sm')
+    # # Load spaCy NLP model
+    # nlp = spacy.load('en_core_web_sm')
 
     return df, pipeline, similarity_matrix, recommendation_data, analysis_data, nlp
 
@@ -58,15 +58,15 @@ def load_resources():
 df, pipeline, similarity_matrix, recommendation_data, analysis_data, nlp = load_resources()
 
 # Custom transformer for text preprocessing
-class TextPreprocessor(BaseEstimator, TransformerMixin):
-    def __init__(self, nlp):
-        self.nlp = nlp
+# class TextPreprocessor(BaseEstimator, TransformerMixin):
+#     def __init__(self, nlp):
+#         self.nlp = nlp
 
-    def fit(self, X, y=None):
-        return self
+#     def fit(self, X, y=None):
+#         return self
 
-    def transform(self, X):
-        return X.apply(lambda text: ' '.join([token.lemma_ for token in self.nlp(str(text))]))
+#     def transform(self, X):
+#         return X.apply(lambda text: ' '.join([token.lemma_ for token in self.nlp(str(text))]))
 
 # Rest of your Streamlit app code (e.g., UI, filtering, recommendation logic, etc.)
 
