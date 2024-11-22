@@ -122,15 +122,27 @@ if st.button("Get Recommendations"):
     
     # Display recommendations
     if not recommendations.empty:
-        st.write("Top Recommendations:")
+        st.write("### Top Recommendations:")
         for i, row in recommendations.iterrows():
-            st.write(f"**Property Name**: {row['property_name']}")
-            st.write(f"**Location (Area)**: {row['area']}")
-            st.write(f"**Price**: {row['price']:,} Taka")
-            st.write(f"**Floor Area**: {row['floor_area']} sqft")
-            st.write(f"**Bedrooms**: {row['bedrooms']}, **Bathrooms**: {row['bathrooms']}")
-            st.write(f"**Description**: {row['short_description'][:100]}...")  # Display first 100 characters
-            st.write(f"[View Property]({row['property_url']})")
+            # Create a visually appealing card for each property
+            st.markdown(f"""
+            <div style="border: 2px solid #4CAF50; border-radius: 10px; padding: 15px; margin-bottom: 20px; background-color: #f9f9f9;">
+                <h3 style="color: #4CAF50; margin-bottom: 10px;">🏠 {row['property_name']}</h3>
+                <p><strong>📍 Location:</strong> {row['area']}</p>
+                <p><strong>💰 Price:</strong> {row['price']:,} Taka</p>
+                <p><strong>📏 Floor Area:</strong> {row['floor_area']} sqft</p>
+                <p><strong>🛏 Bedrooms:</strong> {row['bedrooms']} | <strong>🛁 Bathrooms:</strong> {row['bathrooms']}</p>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Add the description inside the container using an expander
+            with st.expander("See Full Description"):
+                st.write(row['short_description'])
+            
+            # Add a "View Property" button
+            st.markdown(f"""
+            <a href="{row['property_url']}" target="_blank" style="color: white; background-color: #4CAF50; padding: 10px 15px; border-radius: 5px; text-decoration: none;">View Property</a>
+            """, unsafe_allow_html=True)
             st.write("---")
     else:
         st.warning("No properties found matching your criteria.")
