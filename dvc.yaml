@@ -1,0 +1,27 @@
+stages:
+  preprocess:
+    cmd: python build_features.py
+    deps:
+      - build_features.py
+      - D:/Work file/bd_real_estate/data/processed/processed_buy_data.csv
+    outs:
+      - D:/Work file/bd_real_estate/data/cleaned/cleaned_data.csv
+
+  train:
+    cmd: python train.py
+    deps:
+      - train.py
+      - D:/Work file/bd_real_estate/data/cleaned/cleaned_data.csv
+    outs:
+      - models/final_model.pkl
+      - models/preprocessing_pipeline.pkl
+
+  predict:
+    cmd: python predict.py
+    deps:
+      - predict.py
+      - models/final_model.pkl
+      - models/preprocessing_pipeline.pkl
+    outs:
+      - predictions/predictions.csv
+
