@@ -164,11 +164,11 @@ if 'base_price' in st.session_state:
     if st.button("Get Recommendations for this Price"):
         st.header("Step 2: Property Recommendations")
         recommendations = get_recommendations_rf(
-            0, 
-            top_n=5, 
-            area=area, 
-            min_price=st.session_state.lowest_price, 
-            max_price=st.session_state.high_price, 
+            0,
+            top_n=5,
+            area=area,
+            min_price=st.session_state.lowest_price,
+            max_price=st.session_state.high_price,
             min_bedrooms=bedrooms
         )
         
@@ -177,14 +177,29 @@ if 'base_price' in st.session_state:
         else:
             st.session_state.recommended_properties = recommendations  # Save recommended properties for visualization
             for i, row in recommendations.iterrows():
-                st.write(f"**Property Name**: {row['property_name']}")
-                st.write(f"**Location (Area)**: {row['area']}")
-                st.write(f"**Price**: {row['price']}")
-                st.write(f"**Floor Area**: {row['floor_area']} sqft")
-                st.write(f"**Bedrooms**: {row['bedrooms']}, **Bathrooms**: {row['bathrooms']}")
-                st.write(f"**Description**: {row['short_description'][:100]}...")
-                st.write(f"[View Property]({row['property_url']})")
+                # Display the property container with all details
+                st.markdown(f"""
+                <div style="border: 2px solid #4CAF50; border-radius: 10px; padding: 15px; margin-bottom: 20px; background-color: #f9f9f9;">
+                    <h3 style="color: #4CAF50; margin-bottom: 10px;">🏠 {row['property_name']}</h3>
+                    <p><strong>📍 Location:</strong> {row['area']}</p>
+                    <p><strong>💰 Price:</strong> {row['price']:,} Taka</p>
+                    <p><strong>📏 Floor Area:</strong> {row['floor_area']} sqft</p>
+                    <p><strong>🛏 Bedrooms:</strong> {row['bedrooms']} | <strong>🛁 Bathrooms:</strong> {row['bathrooms']}</p>
+                </div>
+                """, unsafe_allow_html=True)
+
+                # Add the description inside the container using an expander
+                with st.expander("See Full Description"):
+                    st.write(row['short_description'])
+
+                # Add a "View Property" button
+                st.markdown(f"""
+                <a href="{row['property_url']}" target="_blank" style="color: white; background-color: #4CAF50; padding: 10px 15px; border-radius: 5px; text-decoration: none;">View Property</a>
+                """, unsafe_allow_html=True)
+                
+                # Add a separator between properties
                 st.write("---")
+
 
 if 'base_price' in st.session_state and 'recommended_properties' in st.session_state:
     # Step 3: Analysis trigger
