@@ -143,33 +143,11 @@ st.title("Real Estate Prediction, Recommendation, and Analysis")
 
 # Step 1: Price Prediction
 st.header("Step 1: Price Prediction")
-area = st.selectbox(
-    'Area name', 
-    sorted(df['area'].unique().tolist()), 
-    index=sorted(df['area'].unique().tolist()).index('Badda')  # set default to 'badda'
-)
-
-bedrooms = float(st.selectbox(
-    'Number of Bedrooms', 
-    sorted(df['bedrooms'].unique().tolist()), 
-    value=3  # default to 3
-))
-
-bathrooms = float(st.selectbox(
-    'Number of Bathrooms', 
-    sorted(df['bathrooms'].unique().tolist()), 
-    value=2  # default to 2
-))
-
-floor_area = float(st.number_input(
-    'Built-up Area', 
-    value=1000.0  # default to 1000
-))
-
-price_per_sqft = float(st.number_input(
-    'Price per Square Foot', 
-    value=5555.0  # default to 5555
-))
+area = st.selectbox('Area name', sorted(df['area'].unique().tolist()), index=sorted(df['area'].unique().tolist()).index('Badda') if 'Badda' in df['area'].unique() else 0)
+bedrooms = float(st.selectbox('Number of Bedrooms', sorted(df['bedrooms'].unique().tolist()), index=sorted(df['bedrooms'].unique().tolist()).index(3.0) if 3.0 in df['bedrooms'].unique() else 0))
+bathrooms = float(st.selectbox('Number of Bathrooms', sorted(df['bathrooms'].unique().tolist()), index=sorted(df['bathrooms'].unique().tolist()).index(2.0) if 2.0 in df['bathrooms'].unique() else 0))
+floor_area = float(st.number_input('Built-up Area', value=1000.0))
+price_per_sqft = float(st.number_input('Price per Square Foot', value=5555.0))
 
 
 if st.button("Predict Price"):
