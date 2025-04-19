@@ -101,9 +101,22 @@ df, pipeline, similarity_matrix, rf = load_resources()
 #         return X.apply(lambda text: ' '.join([token.lemma_ for token in self.nlp(str(text))]))
 
 # Helper function: filter recommendation data based on rf (recommendation model or dataset)
-def filter_data_rf(data, area=None, min_price=None, max_price=None, min_bedrooms=None, max_bedrooms=None):
-    # Assuming rf is a DataFrame or something that can be filtered like a DataFrame
+# Helper function: filter recommendation data with default values
+def filter_data_rf(data, 
+                   area="badda", 
+                   min_price=None, 
+                   max_price=None, 
+                   min_bedrooms=3, 
+                   max_bedrooms=None, 
+                   min_bathrooms=2, 
+                   max_bathrooms=None,
+                   min_sqft=1000,
+                   max_sqft=None,
+                   min_price_per_sqft=5555,
+                   max_price_per_sqft=None):
+    
     filtered_data = data.copy()
+
     if area:
         filtered_data = filtered_data[filtered_data['area'].str.contains(area, case=False)]
     if min_price is not None:
@@ -114,7 +127,21 @@ def filter_data_rf(data, area=None, min_price=None, max_price=None, min_bedrooms
         filtered_data = filtered_data[filtered_data['bedrooms'] >= min_bedrooms]
     if max_bedrooms is not None:
         filtered_data = filtered_data[filtered_data['bedrooms'] <= max_bedrooms]
+    if min_bathrooms is not None:
+        filtered_data = filtered_data[filtered_data['bathrooms'] >= min_bathrooms]
+    if max_bathrooms is not None:
+        filtered_data = filtered_data[filtered_data['bathrooms'] <= max_bathrooms]
+    if min_sqft is not None:
+        filtered_data = filtered_data[filtered_data['built_up_area'] >= min_sqft]
+    if max_sqft is not None:
+        filtered_data = filtered_data[filtered_data['built_up_area'] <= max_sqft]
+    if min_price_per_sqft is not None:
+        filtered_data = filtered_data[filtered_data['price_per_sqft'] >= min_price_per_sqft]
+    if max_price_per_sqft is not None:
+        filtered_data = filtered_data[filtered_data['price_per_sqft'] <= max_price_per_sqft]
+
     return filtered_data
+
 
 # Helper function: get recommendations based on rf
 def get_recommendations_rf(index, top_n=5, area=None, min_price=None, max_price=None, min_bedrooms=None, max_bedrooms=None):
