@@ -146,7 +146,7 @@ st.header("Step 1: Price Prediction")
 area = st.selectbox(
     'Area name', 
     sorted(df['area'].unique().tolist()), 
-    index=sorted(df['area'].unique().tolist()).index('badda')  # set default to 'badda'
+    index=sorted(df['area'].unique().tolist()).index('Badda')  # set default to 'badda'
 )
 
 bedrooms = float(st.selectbox(
