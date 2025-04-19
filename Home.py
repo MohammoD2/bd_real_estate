@@ -102,21 +102,9 @@ df, pipeline, similarity_matrix, rf = load_resources()
 
 # Helper function: filter recommendation data based on rf (recommendation model or dataset)
 # Helper function: filter recommendation data with default values
-def filter_data_rf(data, 
-                   area="badda", 
-                   min_price=None, 
-                   max_price=None, 
-                   min_bedrooms=3, 
-                   max_bedrooms=None, 
-                   min_bathrooms=2, 
-                   max_bathrooms=None,
-                   min_sqft=1000,
-                   max_sqft=None,
-                   min_price_per_sqft=5555,
-                   max_price_per_sqft=None):
-    
+def filter_data_rf(data, area=None, min_price=None, max_price=None, min_bedrooms=None, max_bedrooms=None):
+    # Assuming rf is a DataFrame or something that can be filtered like a DataFrame
     filtered_data = data.copy()
-
     if area:
         filtered_data = filtered_data[filtered_data['area'].str.contains(area, case=False)]
     if min_price is not None:
@@ -127,19 +115,6 @@ def filter_data_rf(data,
         filtered_data = filtered_data[filtered_data['bedrooms'] >= min_bedrooms]
     if max_bedrooms is not None:
         filtered_data = filtered_data[filtered_data['bedrooms'] <= max_bedrooms]
-    if min_bathrooms is not None:
-        filtered_data = filtered_data[filtered_data['bathrooms'] >= min_bathrooms]
-    if max_bathrooms is not None:
-        filtered_data = filtered_data[filtered_data['bathrooms'] <= max_bathrooms]
-    if min_sqft is not None:
-        filtered_data = filtered_data[filtered_data['built_up_area'] >= min_sqft]
-    if max_sqft is not None:
-        filtered_data = filtered_data[filtered_data['built_up_area'] <= max_sqft]
-    if min_price_per_sqft is not None:
-        filtered_data = filtered_data[filtered_data['price_per_sqft'] >= min_price_per_sqft]
-    if max_price_per_sqft is not None:
-        filtered_data = filtered_data[filtered_data['price_per_sqft'] <= max_price_per_sqft]
-
     return filtered_data
 
 
@@ -168,11 +143,34 @@ st.title("Real Estate Prediction, Recommendation, and Analysis")
 
 # Step 1: Price Prediction
 st.header("Step 1: Price Prediction")
-area = st.selectbox('Area name', sorted(df['area'].unique().tolist()))
-bedrooms = float(st.selectbox('Number of Bedrooms', sorted(df['bedrooms'].unique().tolist())))
-bathrooms = float(st.selectbox('Number of Bathrooms', sorted(df['bathrooms'].unique().tolist())))
-floor_area = float(st.number_input('Built-up Area'))
-price_per_sqft = float(st.number_input('Price per Square Foot'))
+area = st.selectbox(
+    'Area name', 
+    sorted(df['area'].unique().tolist()), 
+    index=sorted(df['area'].unique().tolist()).index('badda')  # set default to 'badda'
+)
+
+bedrooms = float(st.selectbox(
+    'Number of Bedrooms', 
+    sorted(df['bedrooms'].unique().tolist()), 
+    value=3  # default to 3
+))
+
+bathrooms = float(st.selectbox(
+    'Number of Bathrooms', 
+    sorted(df['bathrooms'].unique().tolist()), 
+    value=2  # default to 2
+))
+
+floor_area = float(st.number_input(
+    'Built-up Area', 
+    value=1000.0  # default to 1000
+))
+
+price_per_sqft = float(st.number_input(
+    'Price per Square Foot', 
+    value=5555.0  # default to 5555
+))
+
 
 if st.button("Predict Price"):
     data = [[area, bedrooms, bathrooms, floor_area, price_per_sqft]]
