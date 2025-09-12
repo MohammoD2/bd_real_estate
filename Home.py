@@ -14,7 +14,7 @@ st.set_page_config(
     page_icon="🏘️",
 )
 st.header("Welcome to my real estate project🏘️")
-st.image("R.jpg", caption=None, width=None, use_column_width=None, clamp=False, channels="RGB", output_format="auto")
+st.image("R.jpg", use_column_width=True)
 st.sidebar.success("Select the specific feature above.")
 # Retrieve the Google Drive file IDs from Streamlit secrets management
 st.markdown(
