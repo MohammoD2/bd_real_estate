@@ -2,7 +2,7 @@
 # Base Theme: Crucial for a light theme
 base = "light" 
 primaryColor = "#7393B3" 
-backgroundColor = "#FFFFFF" 
+backgroundColor = "#F7F9FB" 
 secondaryBackgroundColor = "#F7F9FB" 
 textColor = "#333333" 
 
