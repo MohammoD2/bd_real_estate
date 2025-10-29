@@ -2,7 +2,7 @@
 
 primaryColor = "#0077B6" 
 backgroundColor = "#80DEEA" 
-secondaryBackgroundColor = "#F7F9FB" 
+secondaryBackgroundColor = "#F0F8FF" 
 textColor = "#333333" 
 # Font Style: Use a modern, clean font
 font = "sans serif"
