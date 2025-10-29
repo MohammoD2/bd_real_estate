@@ -1,9 +1,8 @@
 [theme]
 
 primaryColor = "#0077B6" 
-backgroundColor = "#0077B6" 
+backgroundColor = "#21BCFF" 
 secondaryBackgroundColor = "#F7F9FB" 
 textColor = "#333333" 
-
 # Font Style: Use a modern, clean font
 font = "sans serif"
