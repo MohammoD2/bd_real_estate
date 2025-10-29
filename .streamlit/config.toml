@@ -1,0 +1,20 @@
+[theme]
+# Base Theme: Crucial for a light theme
+base = "light" 
+
+# Primary Color: A professional, trustworthy, and calming light-medium blue-gray. 
+# Excellent for buttons and interactive elements.
+primaryColor = "#0077B6" 
+
+# Background Color: The main background. Pure white for maximum brightness and clarity.
+backgroundColor = "#FFFFFF" 
+
+# Secondary Background: Used for sidebars and component backgrounds. 
+# A very pale, almost invisible gray for subtle contrast.
+secondaryBackgroundColor = "#F7F9FB" 
+
+# Text Color: A soft, readable dark gray for good contrast without being harsh black.
+textColor = "#333333" 
+
+# Font Style: Use a modern, clean font
+font = "Helvetica, Arial, sans serif"
